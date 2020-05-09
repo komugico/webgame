@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,10 +74,18 @@ WSGI_APPLICATION = 'webgame.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+database_info = json.loads(os.join(BASE_DIR, "webgame", "database_info.json"))
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': database_info["engine"],
+        'NAME': database_info["name"],
+        'USER': database_info["user"],
+        'PASSWORD': database_info["password"],
+        'HOST': database_info["host"],
+        'PORT': database_info["port"],
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
 
