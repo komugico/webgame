@@ -1,1 +1,11 @@
-1_python/webgame/webgame/database_info.json
+## React
+1_python/webgame/resources/react/node_modules/
+1_python/webgame/**/.DS_Store
+
+### Django ###
+1_python/*.log
+1_python/*.pot
+1_python/*.pyc
+1_python/1_python/webgame/webgame/database_info.json
+1_python/webgame/**/__pycache__/
+1_python/webgame/resources/static/js/
