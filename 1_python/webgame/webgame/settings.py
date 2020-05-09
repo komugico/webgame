@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'webgame.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-database_info = json.loads(os.join(BASE_DIR, "webgame", "database_info.json"))
+database_info = json.loads(os.path.join(BASE_DIR, "webgame", "database_info.json"))
 DATABASES = {
     'default': {
         'ENGINE': database_info["engine"],
