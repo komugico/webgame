@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.views import generic
 
 # Create your views here.
-def index(request):
-    template = loader.get_template('home/index.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
+class IndexView(generic.TemplateView):
+    template_name = "home/index.html"
