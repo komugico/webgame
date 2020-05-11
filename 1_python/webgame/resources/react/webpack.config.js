@@ -3,7 +3,9 @@ const path = require('path');
 
 module.exports = {
     entry: {
+        share_header:   path.resolve(__dirname, "src/share/header.jsx"),
         home_index:     path.resolve(__dirname, "src/home/index.jsx"),
+        othello_game:   path.resolve(__dirname, "src/othello/game.jsx"),
     },
     output: {
         path: path.resolve(__dirname, "../static/js/") ,
