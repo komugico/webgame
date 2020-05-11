@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Othello{% endblock %}
+
+{% block stylesheet %}{% endblock %}
+
+{% block content %}
+    {% csrf_token %}
+
+    <div id="game"></div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/othello_game.js' %}"></script>
+{% endblock %}
