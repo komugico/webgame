@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import json
+from webgame.conf import DB_CONF
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,9 @@ ROOT_URLCONF = 'webgame.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, "resources", "templates")
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,16 +77,14 @@ WSGI_APPLICATION = 'webgame.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-with open(os.path.join(BASE_DIR, "webgame", "database_info.json"), "r") as f:
-    database_info = json.load(f)
 DATABASES = {
     'default': {
-        'ENGINE': database_info["engine"],
-        'NAME': database_info["name"],
-        'USER': database_info["user"],
-        'PASSWORD': database_info["password"],
-        'HOST': database_info["host"],
-        'PORT': database_info["port"],
+        'ENGINE': DB_CONF["engine"],
+        'NAME': DB_CONF["name"],
+        'USER': DB_CONF["user"],
+        'PASSWORD': DB_CONF["password"],
+        'HOST': DB_CONF["host"],
+        'PORT': DB_CONF["port"],
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
@@ -128,3 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'resources/static'),
+]
