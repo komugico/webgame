@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 class Home extends React.Component {
     constructor() {
@@ -15,5 +15,5 @@ class Home extends React.Component {
 
 ReactDOM.render(
     <Home />,
-    document.getElementById('home')
+    document.getElementById("home")
 );
