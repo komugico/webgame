@@ -15,11 +15,16 @@ class Game extends React.Component {
     render() {
         return (
             <Container fluid>
+                <br />
                 <Row>
                     <Col xl={8} lg={8} md={8} sm={12} xs={12}>
                         <Row>
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
-                                <InfoPanel />
+                                <InfoPanel
+                                    player1={{ name : 'Player' }}
+                                    player2={{ name : 'Enemy' }}
+                                    gameInfo={{ score : { player1: 10, player2: 12 }, turn : 'Player 1', gameID : 12345 }}
+                                />
                             </Col>
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                                 <OthelloPanel />
