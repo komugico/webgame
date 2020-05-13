@@ -3,10 +3,13 @@
 
 {% block title %}Othello{% endblock %}
 
-{% block stylesheet %}{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/othello/othello.css' %}">
+{% endblock %}
 
 {% block content %}
     {% csrf_token %}
+    <img src="/static/images/dog.png" style="display:none" />
 
     <div id="game"></div>
 {% endblock %}
