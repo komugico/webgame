@@ -34,7 +34,9 @@ class Game extends React.Component {
                     <Col xl={4} lg={4} md={4} sm={12} xs={12}>
                         <Row>
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
-                                <LogPanel />
+                                <LogPanel
+                                    logs={[["Plyaer 1", "First Log", "2020/5/12 10:12"], ["Plyaer 2", "Second Log", "2020/5/12 10:14"], ["Plyaer 1", "Third Log", "2020/5/12 10:16"]].reverse()}
+                                />
                             </Col>
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                                 <ChatPanel />

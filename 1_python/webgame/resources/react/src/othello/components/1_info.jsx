@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card,  Col, Row } from 'react-bootstrap';
+import { Card, Col, Row } from 'react-bootstrap';
 
 import { PlayerInfoPanel } from './2_player_info.jsx';
 
