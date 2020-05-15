@@ -10,6 +10,18 @@ import { ChatPanel } from './components/1_chat.jsx';
 class Game extends React.Component {
     constructor() {
         super();
+
+        this.state = {
+            player1: { name: "Player" },
+            player2: { name: "Enemy"},
+            gameInfo: { score : { player1: 10, player2: 12 }, turn : "Player 1", gameID : 12345 },
+            logs: [["Plyaer 1", "First Log", "2020/5/12 10:12"], ["Plyaer 2", "Second Log", "2020/5/12 10:14"], ["Plyaer 1", "Third Log", "2020/5/12 10:16"]].reverse(),
+            chats: [["Player 1", "First Comment", "2020/5/12 10:12"], ["Plyaer 2", "Second Comment", "2020/5/12 10:14"], ["Plyaer 1", "Third Comment", "2020/5/12 10:16"]].reverse()
+        }
+    }
+
+    componentDidMount() {
+        // do nothing
     }
 
     render() {
@@ -21,9 +33,9 @@ class Game extends React.Component {
                         <Row>
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                                 <InfoPanel
-                                    player1={{ name : 'Player' }}
-                                    player2={{ name : 'Enemy' }}
-                                    gameInfo={{ score : { player1: 10, player2: 12 }, turn : 'Player 1', gameID : 12345 }}
+                                    player1={this.state.player1}
+                                    player2={this.state.player2}
+                                    gameInfo={this.state.gameInfo}
                                 />
                             </Col>
                         </Row>
@@ -38,7 +50,7 @@ class Game extends React.Component {
                         <Row>
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                                 <LogPanel
-                                    logs={[["Plyaer 1", "First Log", "2020/5/12 10:12"], ["Plyaer 2", "Second Log", "2020/5/12 10:14"], ["Plyaer 1", "Third Log", "2020/5/12 10:16"]].reverse()}
+                                    logs={this.state.logs}
                                 />
                             </Col>
                         </Row>
@@ -46,7 +58,7 @@ class Game extends React.Component {
                         <Row>
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                                 <ChatPanel
-                                    chats={[["Player 1", "First Comment", "2020/5/12 10:12"], ["Plyaer 2", "Second Comment", "2020/5/12 10:14"], ["Plyaer 1", "Third Comment", "2020/5/12 10:16"]].reverse()}
+                                    chats={this.state.chats}
                                 />
                             </Col>
                         </Row>
