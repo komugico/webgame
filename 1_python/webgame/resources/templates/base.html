@@ -12,6 +12,10 @@
     <title>{% block title %}{% endblock %} | Web Game</title>
   </head>
   <body>
+    {% if user.is_authenticated %}
+      <div id="username" type="hidden" style="display: none">{{ user.get_username }}</div>
+    {% endif %}
+
     <div id="header"></div>
     {% block content %}{% endblock %}
     <script src="{% static 'js/share_header.js' %}"></script>

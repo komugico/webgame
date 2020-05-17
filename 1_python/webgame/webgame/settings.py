@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home',
-    'othello',
+    'widget_tweaks',                    # DjangoのフォームをBootstrapで整形ｓ
+    'accounts.apps.AccountsConfig',
+    'home.apps.HomeConfig',
+    'othello.apps.OthelloConfig',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'resources/static'),
 ]
+
+LOGIN_REDIRECT_URL = '/'
