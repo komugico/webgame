@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { STONE_EMPTY as E, STONE_BLACK as B, STONE_WHITE as W, PUT_POS as P, FLIP_INTERVAL } from './othello_const.jsx';
+import { STONE_EMPTY as E, STONE_BLACK as B, STONE_WHITE as W, PUT_POS as P, FLIP_WAIT_T, FLIP_ANIM_T } from './othello_const.jsx';
 
 export class Square extends React.Component {
     constructor() {
@@ -26,7 +26,7 @@ export class Square extends React.Component {
     updateStone(stone, flip) {
         if (stone == W || stone == B) {
             if (flip > 0) {
-                this.flipAnimation(stone, (flip - 1) * FLIP_INTERVAL);
+                this.flipAnimation(stone, (flip - 1) * FLIP_WAIT_T);
             }
             else {
                 this.setState({ stoneImg: this.getStoneImg(stone, "stone") });
@@ -37,20 +37,23 @@ export class Square extends React.Component {
         }
     }
 
-    flipAnimation(stone, interval) {
-        let stone1 = (stone == W) ? B : W;
-        let stone2 = (stone == W) ? W : B;
+    flipAnimation(targetStone, waitInterval) {
+        let stone1 = (targetStone == W) ? B : W;
+        let stone2 = (targetStone == W) ? W : B;
 
-        this.setState({ stoneImg: this.getStoneImg(stone1, "stone") })
-        setTimeout(() => {
-            this.setState({ stoneImg: this.getStoneImg(stone1, "stone anime-flip1") });
-            setTimeout(() => {
-                this.setState({ stoneImg: this.getStoneImg(stone2, "stone anime-flip2") });
+        const promiseFlip = (timeout, stone, className) => {
+            return new Promise(resolve => {
                 setTimeout(() => {
-                    this.setState({ stoneImg: this.getStoneImg(stone2, "stone") });
-                }, 500);
-            }, 500);
-        }, interval);
+                    this.setState({ stoneImg: this.getStoneImg(stone, className) });
+                    resolve();
+                }, timeout);
+            });
+        };
+
+        promiseFlip(0, stone1, "stone")
+            .then(() => promiseFlip(waitInterval, stone1, "stone anime-flip1"))
+            .then(() => promiseFlip(FLIP_ANIM_T, stone2, "stone anime-flip2"))
+            .then(() => promiseFlip(FLIP_ANIM_T, stone2, "stone"));
     }
 
     getStoneImg(stone, className) {

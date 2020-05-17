@@ -1,7 +1,8 @@
 export const STONE_EMPTY = 0;
 export const STONE_WHITE = 1;
 export const STONE_BLACK = 2;
-export const FLIP_INTERVAL = 250;
+export const FLIP_WAIT_T = 250;
+export const FLIP_ANIM_T = 500;
 export const PUT_POS = -1;
 
 let E = STONE_EMPTY;
