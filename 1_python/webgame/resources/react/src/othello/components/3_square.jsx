@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { STONE_EMPTY as E, STONE_BLACK as B, STONE_WHITE as W, FLIP_INTERVAL } from './othello_const.jsx';
+import { STONE_EMPTY as E, STONE_BLACK as B, STONE_WHITE as W, PUT_POS as P, FLIP_INTERVAL } from './othello_const.jsx';
 
 export class Square extends React.Component {
     constructor() {
@@ -15,9 +15,17 @@ export class Square extends React.Component {
         this.updateStone(this.props.stone, this.props.flip)
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.turnCnt != prevProps.turnCnt) {
+            if (this.props.turnCnt <= 5) {
+                this.updateStone(this.props.stone, this.props.flip);
+            }
+        }
+    }
+
     updateStone(stone, flip) {
         if (stone == W || stone == B) {
-            if (flip != 0) {
+            if (flip > 0) {
                 this.flipAnimation(stone, (flip - 1) * FLIP_INTERVAL);
             }
             else {
@@ -60,7 +68,7 @@ export class Square extends React.Component {
     render() {
         return (
             <Col className="square-col">
-                <button className="square">
+                <button className={ this.props.flip == P ? "square put-pos" : "square" }>
                     {this.state.stoneImg}
                 </button>
             </Col>

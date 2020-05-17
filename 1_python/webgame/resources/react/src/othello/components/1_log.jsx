@@ -7,7 +7,7 @@ export class LogPanel extends React.Component {
     }
 
     createTable(logs) {
-        let trs = logs.map((tr, idx) => this.createTr([idx].concat(tr)));
+        let trs = logs.map((tr, idx, logs) => this.createTr([logs.length - idx].concat(tr), logs.length - idx));
         return (
             <Table striped bordered hover size="sm">
                 <thead>
@@ -25,10 +25,10 @@ export class LogPanel extends React.Component {
         );
     }
 
-    createTr(tr) {
+    createTr(tr, idx) {
         let tds = tr.map(td => this.createTd(td))
         return (
-            <tr>
+            <tr onClick={() => this.props.playbackLog(idx)}>
                 {tds}
             </tr>
         );

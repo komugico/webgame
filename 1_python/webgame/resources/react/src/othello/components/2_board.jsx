@@ -24,7 +24,7 @@ export class Board extends React.Component {
 
     renderSquare(stone, x, y, flip) {
         return (
-            <Square stone={stone} flip={flip} x={x} y={y} />
+            <Square stone={stone} flip={flip} x={x} y={y} turnCnt={this.props.turnCnt} />
         );
     }
 
