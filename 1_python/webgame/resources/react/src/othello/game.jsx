@@ -14,6 +14,7 @@ class Game extends React.Component {
         super();
 
         this.state = {
+            timerCnt: 0,
             player1: { name: "Player" },
             player2: { name: "Enemy"},
             score: { player1: 10, player2: 12 },
