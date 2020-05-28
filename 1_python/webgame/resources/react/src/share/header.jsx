@@ -70,7 +70,7 @@ class Header extends React.Component {
 
 let username = null;
 if (document.getElementById("username") != null) {
-    username = document.getElementById("username").textContent
+    username = document.getElementById("username").textContent;
 }
 
 ReactDOM.render(

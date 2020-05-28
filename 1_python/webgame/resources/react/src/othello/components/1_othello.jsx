@@ -5,6 +5,8 @@ import { Board } from './2_board.jsx';
 import { ControllPanel } from './2_controll.jsx';
 import { STONE_EMPTY as E, STONE_BLACK as B, STONE_WHITE as W, PUT_POS as P, STONES_INIT, FLIPS_INIT } from './othello_const.jsx';
 
+import { httpPOST } from '../../share/http_request.jsx';
+
 export class OthelloPanel extends React.Component {
     constructor() {
         super();
@@ -12,8 +14,10 @@ export class OthelloPanel extends React.Component {
         this.state = {
             stones: STONES_INIT,
             flips: FLIPS_INIT,
-            turnCnt: 0,             // 一旦stateとして吸収しないと，下位コンポーネントにすぐ伝達されてしまう
+            turn: 0,             // 一旦stateとして吸収しないと，下位コンポーネントにすぐ伝達されてしまう
         }
+
+        this.putStone = this.putStone.bind(this);
     }
 
     componentDidMount() {
@@ -21,131 +25,19 @@ export class OthelloPanel extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.turnCnt != prevProps.turnCnt) {
-            console.log(this.props.turnCnt);
-            if (this.props.turnCnt == 0) {
+        if (this.props.turn != prevProps.turn) {
+            if (this.props.turn == 0) {
                 this.setState((state, props) => ({
-                    stones: [
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, W, B, E, E, E],
-                        [E, E, E, B, W, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E]
-                    ],
-                    flips: [
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0]
-                    ],
-                    turnCnt: props.turnCnt,
+                    stones: STONES_INIT,
+                    flips: FLIPS_INIT,
+                    turn: props.turn,
                 }));
             }
-            if (this.props.turnCnt == 1) {
+            else {
                 this.setState((state, props) => ({
-                    stones: [
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, W, B, E, E, E],
-                        [E, E, E, B, B, B, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E]
-                    ],
-                    flips: [
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 1, P, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0]
-                    ],
-                    turnCnt: props.turnCnt,
-                }));
-            }
-            if (this.props.turnCnt == 2) {
-                this.setState((state, props) => ({
-                    stones: [
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, W, B, E, E, E],
-                        [E, E, E, B, W, B, E, E],
-                        [E, E, E, E, E, W, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E]
-                    ],
-                    flips: [
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 1, 0, 0, 0],
-                        [0, 0, 0, 0, 0, P, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0]
-                    ],
-                    turnCnt: props.turnCnt,
-                }));
-            }
-            if (this.props.turnCnt == 3) {
-                this.setState((state, props) => ({
-                    stones: [
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, W, B, E, E, E],
-                        [E, E, E, B, B, B, E, E],
-                        [E, E, E, E, B, W, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E]
-                    ],
-                    flips: [
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 1, 0, 0, 0],
-                        [0, 0, 0, 0, P, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0]
-                    ],
-                    turnCnt: props.turnCnt,
-                }));
-            }
-            if (this.props.turnCnt == 4) {
-                this.setState((state, props) => ({
-                    stones: [
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, W, B, E, E, E],
-                        [E, E, E, W, B, B, E, E],
-                        [E, E, E, W, W, W, E, E],
-                        [E, E, E, E, E, E, E, E],
-                        [E, E, E, E, E, E, E, E]
-                    ],
-                    flips: [
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 1, 0, 0, 0, 0],
-                        [0, 0, 0, P, 2, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0, 0, 0]
-                    ],
-                    turnCnt: props.turnCnt,
+                    stones: props.logs[props.turn - 1].stones,
+                    flips: props.logs[props.turn - 1].flips,
+                    turn: props.turn,
                 }));
             }
         }
@@ -155,12 +47,28 @@ export class OthelloPanel extends React.Component {
 
     }
 
-    sendLog() {
-
-    }
-
     putStone(x, y) {
-
+        if (this.props.logs.length == this.props.turn) {
+            if (this.props.nextPlayer == this.props.me) {
+                httpPOST("post/putstone/", {
+                    "posX": x,
+                    "posY": y
+                }, (err, res) => {
+                    if (res.body["success"]) {
+                        
+                    }
+                    else {
+                        alert(res.body["message"]);
+                    }
+                });
+            }
+            else {
+                alert("あなたの番ではありません．");
+            }
+        }
+        else {
+            alert("現在表示中の盤面は最新ではありません．");
+        }
     }
 
     pass() {
@@ -181,7 +89,7 @@ export class OthelloPanel extends React.Component {
                             <Board
                                 stones={this.state.stones}
                                 flips={this.state.flips}
-                                turnCnt={this.state.turnCnt}
+                                turn={this.state.turn}
                                 putStone={this.putStone}
                             />
                         </Col>

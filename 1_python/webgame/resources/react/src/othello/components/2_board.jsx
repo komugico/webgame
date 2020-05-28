@@ -10,11 +10,11 @@ export class Board extends React.Component {
     }
     
     createBoard(stones, flips) {
-        let board = stones.slice().map((row, y) =>
+        let board = stones.map((row, y) =>
             <Row className="board-row" noGutters>
                 <Col></Col>
                 <Col></Col>
-                {row.slice().map((col, x) => this.renderSquare(col, x, y, flips[y][x]))}
+                {row.map((stone, x) => this.renderSquare(stone, x, y, flips[y][x]))}
                 <Col></Col>
                 <Col></Col>
             </Row>
@@ -24,7 +24,13 @@ export class Board extends React.Component {
 
     renderSquare(stone, x, y, flip) {
         return (
-            <Square stone={stone} flip={flip} x={x} y={y} turnCnt={this.props.turnCnt} />
+            <Square
+                stone={stone}
+                flip={flip}
+                x={x}
+                y={y}
+                turn={this.props.turn}
+                putStone={this.props.putStone} />
         );
     }
 

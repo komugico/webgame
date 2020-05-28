@@ -6,8 +6,8 @@ export class LogPanel extends React.Component {
         super();
     }
 
-    createTable(logs) {
-        let trs = logs.map((tr, idx, logs) => this.createTr([logs.length - idx].concat(tr), logs.length - idx));
+    createTable() {
+        let trs = this.props.logs.map((log, idx) => this.createTr(log, idx));
         return (
             <Table striped bordered hover size="sm">
                 <thead>
@@ -15,7 +15,6 @@ export class LogPanel extends React.Component {
                         <th>#</th>
                         <th>User</th>
                         <th>Log</th>
-                        <th>Timestamp</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,11 +24,12 @@ export class LogPanel extends React.Component {
         );
     }
 
-    createTr(tr, idx) {
-        let tds = tr.map(td => this.createTd(td))
+    createTr(log, idx) {
         return (
             <tr onClick={() => this.props.playbackLog(idx)}>
-                {tds}
+                {this.createTd(idx + 1)}
+                {this.createTd(log["player_username"])}
+                {this.createTd("(" + log["posX"] + ", " + log["posY"] +")")}
             </tr>
         );
     }
@@ -47,7 +47,7 @@ export class LogPanel extends React.Component {
                 <Card.Body>
                     <Row>
                         <Col xl={12} lg={12} md={12} sm={12} xs={12}>
-                            {this.createTable(this.props.logs)}
+                            {this.createTable()}
                         </Col>
                     </Row>
                 </Card.Body>

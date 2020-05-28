@@ -7,6 +7,8 @@ import { OthelloPanel } from './components/1_othello.jsx';
 import { LogPanel } from './components/1_log.jsx';
 import { ChatPanel } from './components/1_chat.jsx';
 
+import { PLAYER_1, PLAYER_2, OBSERVER } from './components/othello_const.jsx';
+
 import { httpGET } from '../share/http_request.jsx';
 
 class Game extends React.Component {
@@ -14,25 +16,27 @@ class Game extends React.Component {
         super();
 
         this.state = {
-            timerCnt: 0,
-            player1: { name: "Player" },
-            player2: { name: "Enemy"},
-            score: { player1: 10, player2: 12 },
-            turn: "Player 1",
-            turnCnt: 0,
+            player1: { name: "" },
+            player2: { name: "" },
+            firstPlayer: PLAYER_1,
+            nextPlayer: PLAYER_1,
+            me: OBSERVER,
+            turn: 0,
             playbackLogIdx: -1,
-            gameID: 12345,
-            logs: [["Plyaer 1", "First Log", "2020/5/12 10:12"], ["Plyaer 2", "Second Log", "2020/5/12 10:14"], ["Plyaer 1", "Third Log", "2020/5/12 10:16"]].reverse(),
+            gameId: -1,
+            logs: [],
             chats: [["Player 1", "First Comment", "2020/5/12 10:12"], ["Plyaer 2", "Second Comment", "2020/5/12 10:14"], ["Plyaer 1", "Third Comment", "2020/5/12 10:16"]].reverse()
         }
 
         this.playbackLog = this.playbackLog.bind(this);
+
+        this.getGameStatus();
     }
 
     componentDidMount() {
         this.timer = setInterval(
             () => this.tick(),
-            1500
+            1000
         );
     }
 
@@ -44,20 +48,66 @@ class Game extends React.Component {
         this.getLog();
         if (this.state.playbackLogIdx >= 0) {
             this.setState((state, props) => ({
-                turnCnt: state.playbackLogIdx,
+                turn: state.playbackLogIdx,
                 playbackLogIdx: -1,
             }));
         }
         else {
-            this.setState((state, props) => ({
-                turnCnt: state.turnCnt + 1,
-            }));
+            if (this.state.logs.length > 0) {
+                if (this.state.turn < this.state.logs[this.state.logs.length - 1].turn) {
+                    this.setState((state, props) => ({
+                        turn: state.turn + 1,
+                    }));
+                }
+            }
         }
     }
 
+    getGameStatus() {
+        httpGET("get/gamestatus/", {}, (err, res) => {
+            if (res.body["success"]) {
+                let me = OBSERVER;
+                if (this.props.username == res.body["player1"].name) {
+                    me = PLAYER_1;
+                }
+                else if (this.props.username == res.body["player2"].name) {
+                    me = PLAYER_2;
+                }
+                this.setState((state, props) => ({
+                    player1: res.body["player1"],
+                    player2: res.body["player2"],
+                    gameId: res.body["gameId"],
+                    firstPlayer: res.body["firstPlayer"],
+                    me: me
+                }));
+            }
+            else {
+                alert(res.body["message"]);
+            }
+        });
+    }
+
     getLog() {
-        httpGET("get/logs/", {}, function (err, res) {
-            console.dir(res);
+        httpGET("get/logs/", {}, (err, res) => {
+            if (res.body["success"]) {
+                let nextPlayer = this.state.firstPlayer;
+                if (res.body["logs"].length > 0) {
+                    let latest_username = res.body["logs"].slice(-1)[0].player_username;
+                    if (latest_username == this.state.player1.name) {
+                        nextPlayer = PLAYER_2;
+                    }
+                    else {
+                        nextPlayer = PLAYER_1;
+                    }
+                }
+                this.setState((state, props) => ({
+                    logs: res.body["logs"],
+                    nextPlayer: nextPlayer
+                }));
+            }
+            else {
+                alert(res.body["message"]);
+            }
         });
     }
 
@@ -82,10 +132,11 @@ class Game extends React.Component {
                                 <InfoPanel
                                     player1={this.state.player1}
                                     player2={this.state.player2}
-                                    score={this.state.score}
+                                    logs={this.state.logs}
                                     turn={this.state.turn}
-                                    turnCnt={this.state.turnCnt}
-                                    gameID={this.state.gameID}
+                                    firstPlayer={this.state.firstPlayer}
+                                    nextPlayer={this.state.nextPlayer}
+                                    gameId={this.state.gameId}
                                 />
                             </Col>
                         </Row>
@@ -94,8 +145,9 @@ class Game extends React.Component {
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                                 <OthelloPanel
                                     logs={this.state.logs}
+                                    nextPlayer={this.state.nextPlayer}
+                                    me={this.state.me}
                                     turn={this.state.turn}
-                                    turnCnt={this.state.turnCnt}
                                 />
                             </Col>
                         </Row>
@@ -105,7 +157,6 @@ class Game extends React.Component {
                             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                                 <LogPanel
                                     logs={this.state.logs}
-                                    playbackLog={this.playbackLog}
                                 />
                             </Col>
                         </Row>
@@ -125,7 +176,12 @@ class Game extends React.Component {
     }
 }
 
+let username = "";
+if (document.getElementById("username") != null) {
+    username = document.getElementById("username").textContent;
+}
+
 ReactDOM.render(
-    <Game />,
+    <Game username={username} />,
     document.getElementById("game")
 );

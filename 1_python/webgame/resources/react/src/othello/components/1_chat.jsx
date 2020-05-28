@@ -6,8 +6,8 @@ export class ChatPanel extends React.Component {
         super();
     }
 
-    createTable(logs) {
-        let trs = logs.map((tr, idx) => this.createTr([idx].concat(tr)));
+    createTable(chats) {
+        let trs = chats.map((row, idx) => this.createTr([idx].concat(row)));
         return (
             <Table striped bordered hover size="sm">
                 <thead>
@@ -25,8 +25,8 @@ export class ChatPanel extends React.Component {
         );
     }
 
-    createTr(tr) {
-        let tds = tr.map(td => this.createTd(td))
+    createTr(row) {
+        let tds = row.map(td => this.createTd(td))
         return (
             <tr>
                 {tds}

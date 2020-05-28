@@ -9,6 +9,8 @@ export class Square extends React.Component {
         this.state = {
             stoneImg: ""
         };
+
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -16,16 +18,14 @@ export class Square extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.turnCnt != prevProps.turnCnt) {
-            if (this.props.turnCnt <= 5) {
-                this.updateStone(this.props.stone, this.props.flip);
-            }
+        if (this.props.turn != prevProps.turn) {
+            this.updateStone(this.props.stone, this.props.flip);
         }
     }
 
     updateStone(stone, flip) {
         if (stone == W || stone == B) {
-            if (flip > 0) {
+            if (flip > 0 && flip != P) {
                 this.flipAnimation(stone, (flip - 1) * FLIP_WAIT_T);
             }
             else {
@@ -68,10 +68,14 @@ export class Square extends React.Component {
         }
     }
 
+    handleClick() {
+        this.props.putStone(this.props.x, this.props.y);
+    }
+
     render() {
         return (
             <Col className="square-col">
-                <button className={ this.props.flip == P ? "square put-pos" : "square" }>
+                <button className={this.props.flip == P ? "square put-pos" : "square"} onClick={this.handleClick}>
                     {this.state.stoneImg}
                 </button>
             </Col>

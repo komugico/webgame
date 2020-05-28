@@ -6,7 +6,18 @@ export function httpGET(url, data, func) {
         .send(data)
         .end(function (err, res) {
             if (err) {
-                alert(res.text);
+                alert(err.text);
+            }
+            func(err, res);
+        });
+}
+
+export function httpPOST(url, data, func) {
+    addHeader(request.post(url))
+        .send(data)
+        .end(function (err, res) {
+            if (err) {
+                alert(err.text);
             }
             func(err, res);
         });
