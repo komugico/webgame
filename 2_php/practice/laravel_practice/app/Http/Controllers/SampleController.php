@@ -26,10 +26,13 @@ class SampleController extends Controller
     }
 
     public function select_player() {
-        $player = Player::find(1);
+        $players = Player::select()
+                          ->join('auth_user', 'othello_player.user_id', '=', 'auth_user.id')
+                          ->select('othello_player.id', 'othello_player.rating', 'auth_user.username')
+                          ->get();
 
         return view('select_player', [
-            "player" => $player
+            "players" => $players
         ]);
     }
 }

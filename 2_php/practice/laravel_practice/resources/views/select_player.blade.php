@@ -3,12 +3,14 @@
 <table border="1">
     <tr>
         <th>id</th>
+        <th>username</th>
         <th>rating</th>
-        <th>user_id</th>
     </tr>
+    @foreach($players as $player)
     <tr>
         <td>{{$player->id}}</td>
+        <td>{{$player->username}}</td>
         <td>{{$player->rating}}</td>
-        <td>{{$player->user_id}}</td>
     </tr>
+    @endforeach
 </table>
